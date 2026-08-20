@@ -1,4 +1,5 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
+import { matchAnalysisResultSchema, type MatchAnalysisResult } from "@/features/job-match/schemas/job-match.schema";
 
 const ai = new GoogleGenAI({ 
   apiKey: process.env.GEMINI_API_KEY || "dummy-key-for-build", 
@@ -47,15 +48,7 @@ export async function extractResumeTextFromImage(input: ResumeImageOcrInput): Pr
   return extractedText;
 }
 
-export interface MatchAnalysisResult {
-  overallScore: number;
-  keywordMatch: number;
-  experienceMatch: number;
-  skillsMatch: number;
-  matchedKeywords: string[];
-  missingKeywords: string[];
-  recommendations: string[];
-}
+export type { MatchAnalysisResult } from "@/features/job-match/schemas/job-match.schema";
 
 const matchAnalysisSchema: Schema = {
   type: Type.OBJECT,
@@ -107,6 +100,10 @@ export async function analyzeResumeMatch(
   resumeText: string, 
   jobDescription: string
 ): Promise<MatchAnalysisResult> {
+  return (await analyzeResumeMatchWithMetadata(resumeText, jobDescription)).result;
+}
+
+export async function analyzeResumeMatchWithMetadata(resumeText: string, jobDescription: string) {
   const prompt = `
     You are an expert ATS (Applicant Tracking System) and senior technical recruiter.
     Analyze the provided CV against the provided Job Description.
@@ -121,6 +118,7 @@ export async function analyzeResumeMatch(
   `;
 
   try {
+    const startedAt = Date.now();
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
@@ -132,7 +130,14 @@ export async function analyzeResumeMatch(
     });
 
     if (response.text) {
-      return JSON.parse(response.text) as MatchAnalysisResult;
+      const result = matchAnalysisResultSchema.parse(JSON.parse(response.text));
+      return {
+        result,
+        model: "gemini-2.5-flash",
+        promptTokens: response.usageMetadata?.promptTokenCount ?? 0,
+        completionTokens: response.usageMetadata?.candidatesTokenCount ?? 0,
+        durationMs: Date.now() - startedAt,
+      };
     }
     
     throw new Error("AI returned empty response");

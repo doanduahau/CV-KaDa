@@ -554,7 +554,9 @@ enum ApplicationEventType {
 model MatchAnalysis {
   id              String   @id @default(cuid())
   resumeVersionId String
-  jobId           String
+  jobId           String?
+  jobDescription  String?  @db.Text
+  source           String   @default("STORED_JOB")
   overallScore    Int      // 0-100
   keywordMatch    Int      // 0-100
   experienceMatch Int      // 0-100
@@ -564,7 +566,7 @@ model MatchAnalysis {
   createdAt       DateTime @default(now())
 
   resumeVersion   ResumeVersion @relation(fields: [resumeVersionId], references: [id], onDelete: Cascade)
-  job             Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  job             Job?          @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   @@index([resumeVersionId])
   @@index([jobId])
@@ -632,6 +634,9 @@ model AiRun {
   completionTokens Int
   model       String   // e.g., "gpt-4o-mini"
   durationMs  Int?
+  status      String   @default("SUCCESS")
+  errorCode   String?
+  promptVersion String @default("legacy")
   
   createdAt   DateTime @default(now())
 

@@ -1,59 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { analyzeResumeMatch } from "@/lib/ai/gemini";
-import { prisma } from "@/lib/db/prisma";
 import { requireActiveRole } from "@/features/auth/services/session-authorization";
+import { JobMatchProviderError, JobMatchResumeNotFoundError, JobMatchValidationError, jobMatchAnalysisService } from "@/features/job-match/services/job-match-analysis.service";
+
+async function requireCandidate() {
+  const session = await auth();
+  if (!session?.user?.id) return { error: NextResponse.json({ error: "Bạn cần đăng nhập." }, { status: 401 }) };
+  const principal = await requireActiveRole(session.user, "CANDIDATE");
+  if (!principal) return { error: NextResponse.json({ error: "Bạn không có quyền thực hiện thao tác này." }, { status: 403 }) };
+  return { principal };
+}
+
+export async function GET() {
+  const access = await requireCandidate();
+  if ("error" in access) return access.error;
+  const analyses = await jobMatchAnalysisService.listRecent(access.principal.id);
+  return NextResponse.json(analyses.map((item) => ({ id: item.id, overallScore: item.overallScore, keywordMatch: item.keywordMatch, experienceMatch: item.experienceMatch, skillsMatch: item.skillsMatch, createdAt: item.createdAt.toISOString(), resumeTitle: item.resumeVersion.resume.title })));
+}
 
 export async function POST(req: NextRequest) {
+  const access = await requireCandidate();
+  if ("error" in access) return access.error;
+  let body: unknown;
+  try { body = await req.json(); }
+  catch { return NextResponse.json({ error: "Nội dung yêu cầu không phải JSON hợp lệ." }, { status: 400 }); }
+
   try {
-    const session = await auth();
-    const principal = await requireActiveRole(session?.user, "CANDIDATE");
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    if (!principal) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-
-    const body = await req.json();
-    const { jobDescription, resumeId } = body;
-
-    if (!jobDescription) {
-      return NextResponse.json({ error: "Job Description is required" }, { status: 400 });
-    }
-
-    // Fetch the specific resume or the user's primary one if not specified
-    const resume = await prisma.resume.findFirst({
-      where: resumeId 
-        ? { id: resumeId, userId: principal.id, deletedAt: null }
-        : { userId: principal.id, isPrimary: true, deletedAt: null },
-      include: {
-        versions: {
-          orderBy: { version: "desc" },
-          take: 1,
-        },
-      },
-      orderBy: { updatedAt: "desc" },
-    });
-
-    if (!resume || !resume.versions.length) {
-      return NextResponse.json({ error: "No CV found to analyze" }, { status: 404 });
-    }
-
-    // Convert CV JSON content to a string format suitable for AI
-    const cvData = resume.versions[0].content;
-    const cvText = JSON.stringify(cvData, null, 2);
-
-    // Call Gemini API
-    const analysisResult = await analyzeResumeMatch(cvText, jobDescription);
-
-    // (Optional) Save the result to Database for historical tracking
-    // await prisma.matchAnalysis.create({ ... })
-
-    return NextResponse.json(analysisResult);
-  } catch (error: unknown) {
-    console.error("Match Analysis API Error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to analyze match" },
-      { status: 500 }
-    );
+    return NextResponse.json(await jobMatchAnalysisService.analyzeManual(access.principal.id, body));
+  } catch (error) {
+    if (error instanceof JobMatchValidationError) return NextResponse.json({ error: error.message }, { status: 400 });
+    if (error instanceof JobMatchResumeNotFoundError) return NextResponse.json({ error: error.message }, { status: 404 });
+    if (error instanceof JobMatchProviderError) return NextResponse.json({ error: error.message }, { status: 502 });
+    console.error("Match analysis failed", error instanceof Error ? error.name : "UnknownError");
+    return NextResponse.json({ error: "Không thể phân tích mức độ phù hợp." }, { status: 500 });
   }
 }
