@@ -37,8 +37,8 @@ The live code is no longer a UI-only prototype. It currently contains:
 
 ## Partial
 
-- AI provider boundary exists as a helper module, but responses are not yet consistently validated with Zod after provider return.
-- AI run auditing is modeled in Prisma but not consistently written by routes.
+- Legacy optimization and interview AI helpers still need consistent provider boundaries and post-provider Zod validation; CV/JD matching now has both.
+- AI run auditing is modeled in Prisma; CV/JD matching writes status, model, token, latency, and prompt-version metadata, while other AI routes remain incomplete.
 - Ownership checks exist in several route queries, but shared ownership helper coverage is incomplete.
 - Resume versioning exists in the schema; UI/editor persistence is still limited.
 - Jobs and tracker have backend models and some repository/API support, but several screens still rely on mock or client-side state.

@@ -8,6 +8,7 @@ export type CandidateDashboardSummary = {
   profileLocation?: string;
   resumeCount: number;
   latestResumeVersionId?: string;
+  latestMatchScore?: number;
   nextAction: {
     label: string;
     href: string;
@@ -41,7 +42,7 @@ function hasMeaningfulCvContent(content: CvData) {
 
 export class CandidateDashboardService {
   async getSummary(userId: string): Promise<CandidateDashboardSummary> {
-    const [user, resumes, applications] = await Promise.all([
+    const [user, resumes, applications, latestMatch] = await Promise.all([
       prisma.user.findUnique({
         where: { id: userId },
         select: {
@@ -65,6 +66,11 @@ export class CandidateDashboardService {
       prisma.application.findMany({
         where: { userId, deletedAt: null },
         select: { status: true },
+      }),
+      prisma.matchAnalysis.findFirst({
+        where: { resumeVersion: { resume: { userId, deletedAt: null } } },
+        select: { overallScore: true },
+        orderBy: { createdAt: "desc" },
       }),
     ]);
 
@@ -117,6 +123,7 @@ export class CandidateDashboardService {
       profileLocation: user?.profile?.location?.trim() || undefined,
       resumeCount: resumes.length,
       latestResumeVersionId,
+      latestMatchScore: latestMatch?.overallScore,
       nextAction,
       applicationCounts: counts,
     };
