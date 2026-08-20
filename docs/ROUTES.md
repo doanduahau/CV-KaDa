@@ -6,7 +6,7 @@
 | --- | --- | --- | --- |
 | `/` | `app/page.tsx` | Implemented, partial data | Dashboard overview with some demo metrics/state. |
 | `/login` | `app/login/page.tsx` | Implemented | Auth.js sign-in UI, including demo credentials path. |
-| `/my-cv` | `app/my-cv/page.tsx` | Partial | CV editor and preview with save action/backend support; persistence flow needs hardening. |
+| `/my-cv` | `app/my-cv/page.tsx` | Implemented | Section-based CV builder with edit/split/preview modes, A4 export, completion guidance, backward-compatible hydration, and authenticated versioned persistence. |
 | `/job-optimization` | `app/job-optimization/page.tsx` | Partial | Calls AI optimization route when authenticated and configured. |
 | `/job-match` | `app/job-match/page.tsx` | Implemented | Validates and analyzes the authenticated candidate's CV against a manual JD, persists advisory results and AI audit metadata, and shows recent history. |
 | `/jobs` | `app/jobs/page.tsx` | Partial/mock | Job repository exists; screen still contains demo/client behavior, with a handoff CTA into assessments. |
