@@ -8,7 +8,7 @@ export default async function LandingPage() {
   const session = await auth();
 
   return (
-    <div className="bg-[#F8FAFC] -m-6 pb-20 font-sans">
+    <div className="bg-[#F8FAFC] pb-20 font-sans">
 
       {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#E8F0FE] to-[#DCE3FE] px-4 py-20 md:px-10 md:py-32 rounded-b-[40px] md:rounded-b-[80px]">
@@ -16,15 +16,15 @@ export default async function LandingPage() {
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 h-96 w-96 rounded-full bg-gradient-to-tr from-[#0047AB]/10 to-blue-300/30 blur-3xl" />
         <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-indigo-200/40 to-blue-200/20 blur-3xl" />
 
-        <div className="relative mx-auto max-w-5xl text-center">
+        <div className="relative mx-auto max-w-7xl text-center">
           <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/60 px-4 py-1.5 backdrop-blur-md">
             <span className="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
             <span className="text-sm font-bold text-[#0047AB]">Tuyển dụng minh bạch bằng thực lực</span>
           </div>
 
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl md:text-6xl lg:text-7xl">
-            Vượt Qua Vòng Hồ Sơ, <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0047AB] to-indigo-600">
+          <h1 className="font-extrabold tracking-tight text-slate-900">
+            <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl">Vượt Qua Vòng Hồ Sơ,</span>
+            <span className="mt-1 block bg-gradient-to-r from-[#0047AB] to-indigo-600 bg-clip-text text-[clamp(2.15rem,5vw,4.5rem)] leading-[1.08] text-transparent lg:whitespace-nowrap">
               Nhận Việc Bằng Kỹ Năng Thật
             </span>
           </h1>
