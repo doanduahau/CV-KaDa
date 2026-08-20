@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!resume || !resume.versions.length) {
-      return NextResponse.json({ error: "No CV found to analyze" }, { status: 404 });
+      return NextResponse.json({ error: "Không tìm thấy CV để phân tích" }, { status: 404 });
     }
 
     // Convert CV JSON content to a string format suitable for AI
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Match Analysis API Error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to analyze match" },
+      { error: error instanceof Error ? error.message : "Không thể phân tích mức độ phù hợp" },
       { status: 500 }
     );
   }

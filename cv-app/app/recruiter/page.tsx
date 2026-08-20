@@ -121,7 +121,7 @@ export default async function RecruiterDashboardPage() {
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-wide text-white/75">Tổng quan nhà tuyển dụng</p>
             <h1 className="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">
-              Chào mừng quay lại, {user.name || user.email || "Recruiter"}!
+              Chào mừng quay lại, {user.name || user.email || "Nhà tuyển dụng"}!
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-white/80">
               Theo dõi tin tuyển dụng, hồ sơ mới và tiến độ xử lý ứng viên trong một màn hình.

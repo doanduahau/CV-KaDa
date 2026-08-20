@@ -74,8 +74,8 @@ export async function simulateCodeExecutionAction(
       output: {
         passed: 0,
         total: 3,
-        logs: ["Compiling...", "Error: Code is too short or empty."],
-        errors: ["SyntaxError: Unexpected end of input"],
+        logs: ["Đang biên dịch...", "Lỗi: Mã nguồn quá ngắn hoặc đang để trống."],
+        errors: ["Lỗi cú pháp: Dữ liệu đầu vào kết thúc đột ngột"],
         executionTimeMs: 120,
       }
     };
@@ -92,12 +92,12 @@ export async function simulateCodeExecutionAction(
         passed: 3,
         total: 3,
         logs: [
-          "Compiling...",
-          "Compilation successful.",
-          "Running tests...",
-          "✓ Test 1: Basic functionality passed (12ms)",
-          "✓ Test 2: Edge cases handled (45ms)",
-          "✓ Test 3: Performance test passed (124ms)"
+          "Đang biên dịch...",
+          "Biên dịch thành công.",
+          "Đang chạy kiểm thử...",
+          "✓ Kiểm thử 1: Chức năng cơ bản đạt yêu cầu (12ms)",
+          "✓ Kiểm thử 2: Đã xử lý trường hợp biên (45ms)",
+          "✓ Kiểm thử 3: Hiệu năng đạt yêu cầu (124ms)"
         ],
         errors: [],
         executionTimeMs: 181,
@@ -110,15 +110,15 @@ export async function simulateCodeExecutionAction(
         passed: 1,
         total: 3,
         logs: [
-          "Compiling...",
-          "Compilation successful with warnings.",
-          "Running tests...",
-          "✓ Test 1: Basic functionality passed (15ms)",
-          "✗ Test 2: Edge cases failed",
-          "✗ Test 3: Performance test failed (timeout)"
+          "Đang biên dịch...",
+          "Biên dịch thành công nhưng có cảnh báo.",
+          "Đang chạy kiểm thử...",
+          "✓ Kiểm thử 1: Chức năng cơ bản đạt yêu cầu (15ms)",
+          "✗ Kiểm thử 2: Chưa xử lý đúng trường hợp biên",
+          "✗ Kiểm thử 3: Hiệu năng chưa đạt (quá thời gian)"
         ],
         errors: [
-          "NullPointerException at line 4: Cannot read properties of undefined",
+          "Lỗi tham chiếu rỗng tại dòng 4: Không thể đọc thuộc tính của giá trị chưa xác định",
           "TimeoutError: Execution exceeded 2000ms limit"
         ],
         executionTimeMs: 2015,

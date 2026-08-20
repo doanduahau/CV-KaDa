@@ -44,7 +44,7 @@ function RouteProgressInner() {
   if (!pending) return null;
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-[100] h-1 overflow-hidden bg-primary/10" role="status" aria-label="?ang chuy?n trang">
+    <div className="fixed left-0 right-0 top-0 z-[100] h-1 overflow-hidden bg-primary/10" role="status" aria-label="Đang chuyển trang" aria-live="polite" aria-busy="true">
       <div className="h-full w-1/2 animate-[route-progress_1.1s_ease-in-out_infinite] rounded-r-full bg-primary shadow-[0_0_16px_rgb(70_72_212/0.55)]" />
     </div>
   );

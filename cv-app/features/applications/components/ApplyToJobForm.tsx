@@ -50,7 +50,7 @@ export function ApplyToJobForm({
               </div>
               <div className="pb-3">
                 <p className="text-sm font-bold text-foreground">Nhà tuyển dụng xem xét</p>
-                <p className="text-xs text-text-muted mt-0.5 font-medium leading-relaxed">Recruiter kiểm tra CV, mức độ phù hợp với JD và lịch sử ứng tuyển.</p>
+                <p className="text-xs text-text-muted mt-0.5 font-medium leading-relaxed">Nhà tuyển dụng kiểm tra CV, mức độ phù hợp với JD và lịch sử ứng tuyển.</p>
               </div>
             </div>
 
