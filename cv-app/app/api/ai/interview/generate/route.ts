@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!resume || !resume.versions.length) {
-      return NextResponse.json({ error: "No CV found" }, { status: 404 });
+      return NextResponse.json({ error: "Không tìm thấy CV" }, { status: 404 });
     }
 
     const cvData = resume.versions[0].content;
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Generate Questions API Error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to generate questions" },
+      { error: error instanceof Error ? error.message : "Không thể tạo câu hỏi phỏng vấn" },
       { status: 500 }
     );
   }
