@@ -101,7 +101,7 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
           <h1 className="font-bold text-foreground text-sm">Bài test kỹ thuật – {roleTitle}</h1>
           <span className="flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">
             <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-            Assessment in progress
+            Đang thực hiện bài đánh giá
           </span>
         </div>
 
@@ -168,7 +168,7 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
           </div>
 
           <div className="flex h-10 items-center justify-between border-y border-gray-200 bg-white px-4 font-bold text-foreground">
-            Repository
+            Kho mã nguồn
           </div>
 
           <div className="h-1/3 overflow-y-auto p-4 bg-white text-xs text-foreground font-mono">
@@ -213,7 +213,7 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
                 }`}
               >
                 <FileCode className={`h-4 w-4 ${activeTaskId === task.id ? "text-blue-500" : "text-gray-400"}`} />
-                Task {idx + 1}
+                Bài {idx + 1}
               </button>
             ))}
           </div>
@@ -223,7 +223,7 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
             <textarea
               value={answers[activeTaskId] || ""}
               onChange={(e) => setAnswers({ ...answers, [activeTaskId]: e.target.value })}
-              placeholder={`// Write your optimized code or system design for Task ${tasks.findIndex(t => t.id === activeTaskId) + 1} here...\n// (Gõ lời giải của bạn vào đây)`}
+              placeholder={`// Viết mã nguồn tối ưu hoặc thiết kế hệ thống cho bài ${tasks.findIndex(t => t.id === activeTaskId) + 1} tại đây...\n// Gõ lời giải của bạn vào đây`}
               className="flex-1 w-full resize-none bg-transparent p-6 font-mono text-[14px] leading-relaxed text-[#c9d1d9] focus:outline-none placeholder:text-[#484f58]"
               spellCheck="false"
             />
@@ -238,14 +238,14 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
                   onClick={() => setActiveTab("terminal")}
                   className={`flex items-center gap-2 px-4 py-1 text-sm font-medium ${activeTab === "terminal" ? "text-foreground border-b-2 border-foreground font-bold" : "text-gray-500 hover:text-gray-800 border-b-2 border-transparent"}`}
                 >
-                  <TerminalSquare className="h-4 w-4" /> Terminal
+                  <TerminalSquare className="h-4 w-4" /> Dòng lệnh
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveTab("tests")}
                   className={`flex items-center gap-2 px-4 py-1 text-sm font-medium ${activeTab === "tests" ? "text-foreground border-b-2 border-foreground font-bold" : "text-gray-500 hover:text-gray-800 border-b-2 border-transparent"}`}
                 >
-                  <CheckCircle2 className="h-4 w-4" /> Tests
+                  <CheckCircle2 className="h-4 w-4" /> Kiểm thử
                   {currentSimResult && (
                     <span className={`ml-1 rounded-full px-1.5 py-0.5 text-[10px] ${currentSimResult.output?.passed === currentSimResult.output?.total ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                       {currentSimResult.output?.passed}/{currentSimResult.output?.total}
@@ -257,7 +257,7 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
                   onClick={() => setActiveTab("database")}
                   className={`flex items-center gap-2 px-4 py-1 text-sm font-medium ${activeTab === "database" ? "text-foreground border-b-2 border-foreground font-bold" : "text-blue-600 hover:text-blue-800 border-b-2 border-transparent"}`}
                 >
-                  <Database className="h-4 w-4" /> Database Schema
+                  <Database className="h-4 w-4" /> Lược đồ cơ sở dữ liệu
                 </button>
               </div>
               <div className="flex gap-2">
@@ -268,7 +268,7 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
                   className="flex items-center gap-2 rounded bg-[#00875A] px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-green-700 disabled:opacity-70 disabled:cursor-wait"
                 >
                   {isSimulating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
-                  {isSimulating ? "Running..." : "Chạy code"}
+                  {isSimulating ? "Đang chạy..." : "Chạy mã"}
                 </button>
               </div>
             </div>
@@ -277,12 +277,12 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
               {activeTab === "terminal" && (
                 <div className="space-y-1">
                   <div className="text-gray-500">$ {scenario.files[0]?.language === 'typescript' ? 'npx ts-node' : 'javac'} {scenario.files[0]?.path.split('/').pop() || `Task_${tasks.findIndex(t => t.id === activeTaskId) + 1}.java`}</div>
-                  {isSimulating && <div className="text-yellow-600 animate-pulse">Compiling and running...</div>}
+                  {isSimulating && <div className="text-yellow-600 animate-pulse">Đang biên dịch và chạy...</div>}
                   {!isSimulating && !currentSimResult && (
                     <div className="text-gray-400 italic">Nhấn &quot;Chạy code&quot; để xem kết quả biên dịch.</div>
                   )}
                   {!isSimulating && currentSimResult && currentSimResult.output?.logs.map((log, i) => (
-                    <div key={i} className={log.includes("Error") || log.includes("failed") ? "text-red-600" : log.includes("success") || log.includes("passed") ? "text-green-600" : ""}>
+                    <div key={i} className={log.includes("Lỗi") || log.startsWith("✗") ? "text-red-600" : log.includes("thành công") || log.startsWith("✓") ? "text-green-600" : ""}>
                       {log}
                     </div>
                   ))}
@@ -297,14 +297,14 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
                   {!currentSimResult && !isSimulating && (
                     <div className="flex flex-col items-center justify-center h-full text-gray-400 pt-10">
                       <CheckCircle2 className="h-8 w-8 mb-2 opacity-20" />
-                      <p>Chưa có kết quả test. Hãy chạy code để kiểm tra hiệu năng.</p>
+                      <p>Chưa có kết quả kiểm thử. Hãy chạy mã để kiểm tra hiệu năng.</p>
                     </div>
                   )}
 
                   {isSimulating && (
                      <div className="flex flex-col items-center justify-center h-full text-gray-400 pt-10">
                      <Loader2 className="h-8 w-8 mb-2 animate-spin text-[#0047AB]" />
-                     <p>Đang chạy các test case kiểm tra tải và hiệu năng...</p>
+                     <p>Đang chạy các trường hợp kiểm thử tải và hiệu năng...</p>
                    </div>
                   )}
 
@@ -339,20 +339,20 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
                       <table className="w-full text-left">
                         <thead>
                           <tr className="text-gray-500 border-b border-gray-200">
-                            <th className="font-medium pb-2">Test case</th>
+                            <th className="font-medium pb-2">Trường hợp kiểm thử</th>
                             <th className="font-medium pb-2 text-center">Kết quả</th>
                             <th className="font-medium pb-2 text-right">Thời gian (ms)</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
-                          {currentSimResult.output.logs.filter(l => l.includes("Test")).map((log, i) => {
-                            const isPass = log.includes("passed");
+                          {currentSimResult.output.logs.filter(l => l.includes("Kiểm thử")).map((log, i) => {
+                            const isPass = log.startsWith("✓");
                             const name = log.split(":")[0]?.replace(/[✓✗]/, '').trim();
                             const timeMatch = log.match(/\((\d+ms)\)/);
-                            const time = timeMatch ? timeMatch[1] : (isPass ? "12ms" : "timeout");
+                            const time = timeMatch ? timeMatch[1] : (isPass ? "12ms" : "quá thời gian");
                             return (
                               <tr key={i}>
-                                <td className="py-3 font-mono">{name || `Test Case ${i+1}`}</td>
+                                <td className="py-3 font-mono">{name || `Kiểm thử ${i+1}`}</td>
                                 <td className="py-3 text-center">
                                   {isPass ? <CheckCircle2 className="h-4 w-4 text-green-600 mx-auto" /> : <XCircle className="h-4 w-4 text-red-600 mx-auto" />}
                                 </td>
@@ -369,7 +369,7 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
 
               {activeTab === "database" && (
                 <div className="whitespace-pre-wrap text-[#0047AB] font-bold">
-                  {scenario.databaseSchema || "// Không có Database Schema cho tình huống này."}
+                  {scenario.databaseSchema || "// Không có lược đồ cơ sở dữ liệu cho tình huống này."}
                 </div>
               )}
             </div>
@@ -420,15 +420,15 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
                 const sim = simulationResults[task.id];
                 return (
                   <div key={task.id} className="flex justify-between">
-                    <span className="text-text-muted font-medium">Task {idx + 1}</span>
+                    <span className="text-text-muted font-medium">Bài {idx + 1}</span>
                     {sim ? (
                       sim.output?.passed === sim.output?.total ? (
-                        <span className="flex items-center gap-1.5 font-bold text-green-600"><CheckCircle2 className="h-3.5 w-3.5" /> Passed</span>
+                        <span className="flex items-center gap-1.5 font-bold text-green-600"><CheckCircle2 className="h-3.5 w-3.5" /> Đạt</span>
                       ) : (
-                        <span className="flex items-center gap-1.5 font-bold text-red-600"><XCircle className="h-3.5 w-3.5" /> Failed</span>
+                        <span className="flex items-center gap-1.5 font-bold text-red-600"><XCircle className="h-3.5 w-3.5" /> Chưa đạt</span>
                       )
                     ) : (
-                      <span className="flex items-center gap-1.5 font-medium text-gray-400">Empty</span>
+                      <span className="flex items-center gap-1.5 font-medium text-gray-400">Chưa làm</span>
                     )}
                   </div>
                 );
@@ -465,10 +465,10 @@ export function AssessmentIDE({ sessionId, roleTitle, tasks, scenario }: { sessi
                 const isPass = len >= 120;
                 return (
                   <div key={task.id} className="flex justify-between border-b border-gray-100 pb-3 last:border-0 last:pb-0">
-                    <span className="truncate pr-4">Task {idx + 1}</span>
+                    <span className="truncate pr-4">Bài {idx + 1}</span>
                     <span className={`flex items-center gap-1.5 shrink-0 ${isPass ? 'text-green-600' : 'text-amber-600'}`}>
                       {isPass ? <CheckCircle2 className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
-                      {len} chars (Yêu cầu &ge; 120)
+                      {len} ký tự (yêu cầu &ge; 120)
                     </span>
                   </div>
                 );

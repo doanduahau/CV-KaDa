@@ -121,7 +121,7 @@ export function EmployerAssessmentReport({ result }: { result: EmployerReport })
               </div>
               <div className="flex justify-between border-b border-border-light pb-2">
                 <dt className="text-text-muted">Hình thức:</dt>
-                <dd className="font-bold text-foreground text-right">Hybrid (Hà Nội)</dd>
+                <dd className="font-bold text-foreground text-right">Kết hợp (Hà Nội)</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-text-muted">Kinh nghiệm yêu cầu:</dt>

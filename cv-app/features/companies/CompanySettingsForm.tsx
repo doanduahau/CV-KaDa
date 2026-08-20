@@ -236,7 +236,7 @@ export function CompanySettingsForm({ company }: CompanySettingsFormProps) {
               R
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-foreground">Recruiter Admin</span>
+              <span className="text-sm font-bold text-foreground">Quản trị viên tuyển dụng</span>
               <span className="text-xs font-medium text-text-muted">Quản trị viên cấp cao</span>
             </div>
           </div>

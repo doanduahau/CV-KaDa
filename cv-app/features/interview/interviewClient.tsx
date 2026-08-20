@@ -102,7 +102,7 @@ export default function InterviewClient() {
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center justify-center gap-3">
           <MessageSquare className="h-8 w-8 text-primary" />
-          Phỏng vấn giả lập (Mock Interview)
+          Phỏng vấn giả lập
         </h1>
         <p className="mt-2 text-text-muted">
           AI sẽ đóng vai nhà tuyển dụng và đưa ra câu hỏi sát nhất với JD và CV của bạn.

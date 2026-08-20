@@ -66,7 +66,7 @@ export const SCENARIO_BANK: Scenario[] = [
     targetRole: "Backend Developer",
     seniority: ["JUNIOR", "MID", "SENIOR"],
     description: "Hệ thống cũ gặp vấn đề nghiêm trọng về hiệu năng do lỗi truy vấn N+1 khi xử lý đơn hàng.",
-    databaseSchema: `// Database Schema (PostgreSQL)
+    databaseSchema: `// Lược đồ cơ sở dữ liệu (PostgreSQL)
 
 Table: users
 - id (UUID, Primary Key)
@@ -170,7 +170,7 @@ public class OrderService {
     targetRole: "Frontend Developer",
     seniority: ["JUNIOR", "MID", "SENIOR"],
     description: "Trang danh sách sản phẩm bị giật lag khi người dùng scroll nhanh, do component re-render quá nhiều lần.",
-    databaseSchema: `// Không có Database Schema cho tình huống Frontend.`,
+    databaseSchema: `// Không có lược đồ cơ sở dữ liệu cho tình huống giao diện người dùng.`,
     files: [
       {
         path: "src/ProductList.tsx",

@@ -76,7 +76,7 @@ export default function AtsGauge({ score }: AtsGaugeProps) {
           </div>
           <div className="flex items-center gap-2 text-xs">
             <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
-            <span className="text-slate-600 font-medium">Cấu trúc định dạng: <strong className="text-slate-900">Great</strong></span>
+            <span className="text-slate-600 font-medium">Cấu trúc định dạng: <strong className="text-slate-900">Tốt</strong></span>
           </div>
           <div className="flex items-center gap-2 text-xs">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />

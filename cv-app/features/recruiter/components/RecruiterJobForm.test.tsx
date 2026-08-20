@@ -41,8 +41,8 @@ describe("RecruiterJobForm", () => {
     expect(screen.getByLabelText("Phòng ban")).toBeInTheDocument();
     expect(screen.getByLabelText(/Kinh nghiệm yêu cầu/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Tại văn phòng" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Hybrid" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Remote" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Kết hợp" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Làm việc từ xa" })).toBeInTheDocument();
     expect(screen.getByLabelText("Tối thiểu (VND)")).toBeInTheDocument();
     expect(screen.getByLabelText("Tối đa (VND)")).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/Nhập kỹ năng/)).toBeInTheDocument();

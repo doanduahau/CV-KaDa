@@ -23,7 +23,7 @@ export function RecruiterHeader({ userName, companyName }: RecruiterHeaderProps)
   const pathname = usePathname();
   const items = getNavItemsForRole("RECRUITER");
   
-  const displayName = userName || "Recruiter";
+  const displayName = userName || "Nhà tuyển dụng";
 
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-outline-variant/60 bg-surface-white px-4 shadow-[0_1px_8px_rgb(0_0_0/0.04)] md:px-8">

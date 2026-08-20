@@ -123,7 +123,7 @@ export default async function LandingPage() {
                   <div className="flex items-center justify-between border-b border-slate-700 pb-4">
                     <div>
                       <h4 className="font-bold text-white">Báo Cáo Năng Lực Ứng Viên</h4>
-                      <p className="text-sm text-slate-400">Match Score: 85% - Rất phù hợp</p>
+                      <p className="text-sm text-slate-400">Điểm phù hợp: 85% - Rất phù hợp</p>
                     </div>
                     <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-400">Sẵn sàng phỏng vấn</span>
                   </div>
@@ -143,28 +143,28 @@ export default async function LandingPage() {
             <div className="order-1 lg:order-2">
               <h2 className="text-3xl font-extrabold md:text-4xl">Tại sao doanh nghiệp thích ứng viên từ CV_KADA?</h2>
               <p className="mt-6 text-lg leading-relaxed text-slate-400">
-                Các nhà tuyển dụng (Recruiters) luôn khao khát tìm được ứng viên &quot;thật&quot;. CV_KADA cung cấp cho họ một hệ thống đánh giá khách quan:
+                Các nhà tuyển dụng luôn khao khát tìm được ứng viên &quot;thật&quot;. CV_KADA cung cấp cho họ một hệ thống đánh giá khách quan:
               </p>
 
               <ul className="mt-8 space-y-5">
                 <li className="flex items-start gap-4">
                   <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-blue-500" />
                   <div>
-                    <h4 className="font-bold text-white">Bằng Chứng Bê Tông (Hard Evidence)</h4>
+                    <h4 className="font-bold text-white">Bằng Chứng Thực Tế</h4>
                     <p className="mt-1 text-sm text-slate-400">Nhà tuyển dụng không chỉ xem CV mà xem cách bạn giải quyết vấn đề kỹ thuật.</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
                   <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-blue-500" />
                   <div>
-                    <h4 className="font-bold text-white">Bảng Xếp Hạng Công Bằng (Leaderboard)</h4>
+                    <h4 className="font-bold text-white">Bảng Xếp Hạng Công Bằng</h4>
                     <p className="mt-1 text-sm text-slate-400">Hệ thống AI tự động phân loại những ứng viên xuất sắc nhất lên đầu danh sách.</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
                   <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-blue-500" />
                   <div>
-                    <h4 className="font-bold text-white">Tối Ưu Hóa Phỏng Vấn (Mock Interview)</h4>
+                    <h4 className="font-bold text-white">Luyện Phỏng Vấn Mô Phỏng</h4>
                     <p className="mt-1 text-sm text-slate-400">Hệ thống tạo ra các câu hỏi phỏng vấn mô phỏng đúng trình độ của bạn để HR dễ dàng phỏng vấn.</p>
                   </div>
                 </li>
