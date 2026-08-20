@@ -1,7 +1,7 @@
 import { resumeRepository, type ResumeRepository } from "../repositories/resume.repository";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import type { CvData } from "../schemas/cv.schema";
+import { CvSchema, type CvData } from "../schemas/cv.schema";
 
 const ResumeTitleSchema = z.string().trim().min(2, "Tên CV phải có ít nhất 2 ký tự.").max(120, "Tên CV không được vượt quá 120 ký tự.");
 const ImportedResumeTextSchema = z.string().trim().min(40, "Nội dung CV quá ngắn để import.").max(20000, "Nội dung CV không được vượt quá 20.000 ký tự.");
@@ -110,6 +110,9 @@ function extractImportedResumeContent(text: string): CvData {
     ],
     educations: [],
     skills,
+    projects: [],
+    certifications: [],
+    languages: [],
   };
 }
 
@@ -137,10 +140,17 @@ export class ResumeService {
         phone: "",
         title: "",
         summary: "",
+        location: "",
+        linkedin: "",
+        github: "",
+        website: "",
       },
       experiences: [],
       educations: [],
       skills: [],
+      projects: [],
+      certifications: [],
+      languages: [],
     };
 
     return this.repository.create(
@@ -159,6 +169,16 @@ export class ResumeService {
 
     const content = extractImportedResumeContent(parsedText.data);
     return this.repository.create(userId, parsedTitle.data, content as Prisma.InputJsonValue);
+  }
+
+  async saveVersion(userId: string, resumeId: string, input: unknown) {
+    const parsed = CvSchema.safeParse(input);
+    if (!parsed.success) throw new ResumeValidationError(parsed.error.issues);
+    return this.repository.saveVersionWithRetry(
+      resumeId,
+      userId,
+      parsed.data as Prisma.InputJsonValue
+    );
   }
 
   /**

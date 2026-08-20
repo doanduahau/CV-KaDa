@@ -17,6 +17,9 @@ describe("useCvStore legacy hydration", () => {
         experiences: [],
         educations: [],
         skills: [],
+        projects: [],
+        certifications: [],
+        languages: [],
       },
       isDirty: false,
     });

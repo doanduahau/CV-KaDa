@@ -44,7 +44,7 @@ The default setup never inserts sample candidates, CVs, or jobs. To opt in on a 
 SEED_DEMO_DATA=true npm run db:seed
 ```
 
-The seed refuses to run when `NODE_ENV=production`. It creates one candidate, five fictional companies, five recruiter accounts, and fifteen Vietnamese job descriptions. Recruiter emails are listed in `prisma/demo-data.ts` and share the local-only password `DemoRecruiter123!`. Running it again updates the same demo records instead of duplicating them. Never enable it against recruitment data used for real applications or assessments.
+The seed refuses to run when `NODE_ENV=production`. It creates one candidate with a fully completed Vietnamese CV, five fictional companies, five recruiter accounts, and fifteen Vietnamese job descriptions. Recruiter emails are listed in `prisma/demo-data.ts` and share the local-only password `DemoRecruiter123!`. Running it again updates the same demo records instead of duplicating them. Never enable it against recruitment data used for real applications or assessments.
 
 ### Database migrations
 

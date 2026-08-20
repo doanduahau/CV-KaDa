@@ -2,6 +2,7 @@ import { randomBytes, scrypt as scryptCallback } from "node:crypto";
 import { promisify } from "node:util";
 import { PrismaClient } from "@prisma/client";
 import { DEMO_RECRUITER_PASSWORD, demoCompanies, demoJobs, demoRecruiters } from "./demo-data";
+import { demoCandidateCv } from "./demo-cv-data";
 
 const prisma = new PrismaClient();
 const scrypt = promisify(scryptCallback);
@@ -46,18 +47,12 @@ async function main() {
       userId: user.id,
       title: "CV Lập trình viên Frontend",
       isPrimary: true,
-      versions: {
-        create: {
-          version: 1,
-          content: {
-            personalInfo: { fullName: "Vũ Nguyễn", title: "Lập trình viên Frontend cao cấp", email: "demo@lumina.ai" },
-            experiences: [{ id: "exp-1", company: "TechVision", role: "Kỹ sư Frontend", startDate: "2021", endDate: "Hiện tại", isCurrent: true, description: "Phát triển ứng dụng có khả năng mở rộng với Next.js và Tailwind CSS." }],
-            educations: [],
-            skills: [{ id: "s-1", name: "React", level: 5 }, { id: "s-2", name: "Next.js", level: 5 }, { id: "s-3", name: "TypeScript", level: 4 }],
-          },
-        },
-      },
     },
+  });
+  await prisma.resumeVersion.upsert({
+    where: { resumeId_version: { resumeId: "demo-resume-frontend", version: 1 } },
+    update: { content: demoCandidateCv },
+    create: { resumeId: "demo-resume-frontend", version: 1, content: demoCandidateCv },
   });
 
   const companies = new Map<string, string>();

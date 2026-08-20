@@ -1,161 +1,56 @@
 "use client";
 
-import { useCvStore } from "../store/useCvStore";
+import { Award, BriefcaseBusiness, FolderKanban, Globe2, GraduationCap, Plus, Trash2, UserRound, Wrench } from "lucide-react";
+import type { ReactNode } from "react";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { Button } from "@/components/ui/Button";
-import { Plus, Trash2 } from "lucide-react";
+import { useCvStore } from "../store/useCvStore";
+
+type CollectionKey = "experiences" | "educations" | "skills" | "projects" | "certifications" | "languages";
+type Field = { key: string; label: string; placeholder?: string; wide?: boolean; textarea?: boolean };
+
+function Section({ title, icon, children }: { title: string; icon: ReactNode; children: ReactNode }) {
+  return <section className="rounded-xl border border-outline-variant bg-surface-white p-4 shadow-sm"><h3 className="mb-4 flex items-center gap-2 font-bold text-foreground">{icon}{title}</h3>{children}</section>;
+}
+
+function CollectionSection({ collectionKey, title, icon, fields, emptyItem }: { collectionKey: CollectionKey; title: string; icon: ReactNode; fields: Field[]; emptyItem: Record<string, unknown> }) {
+  const { cvData, addItem, updateItem, removeItem } = useCvStore();
+  const items = cvData[collectionKey] as unknown as Array<Record<string, unknown> & { id: string }>;
+  return (
+    <Section title={title} icon={icon}>
+      <div className="space-y-3">
+        {items.map((item, index) => <div key={item.id} className="relative rounded-lg border border-outline-variant bg-surface-low p-3">
+          <div className="mb-3 flex items-center justify-between"><span className="text-xs font-semibold text-text-muted">Mục {index + 1}</span><button type="button" onClick={() => removeItem(collectionKey, item.id)} className="rounded-md p-1.5 text-text-muted hover:bg-error-container hover:text-error focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" aria-label={`Xóa mục ${index + 1} trong ${title}`}><Trash2 className="h-4 w-4" /></button></div>
+          <div className="grid gap-3 sm:grid-cols-2">{fields.map((field) => <label key={field.key} className={`space-y-1.5 text-xs font-semibold text-foreground ${field.wide ? "sm:col-span-2" : ""}`}><span>{field.label}</span>{field.textarea ? <Textarea value={String(item[field.key] ?? "")} onChange={(event) => updateItem(collectionKey, item.id, { [field.key]: event.target.value })} placeholder={field.placeholder} rows={3} /> : <Input value={String(item[field.key] ?? "")} onChange={(event) => updateItem(collectionKey, item.id, { [field.key]: event.target.value })} placeholder={field.placeholder} />}</label>)}</div>
+        </div>)}
+        {items.length === 0 ? <p className="rounded-lg border border-dashed border-outline-variant p-4 text-center text-sm text-text-muted">Chưa có dữ liệu. Hãy thêm mục đầu tiên.</p> : null}
+        <Button type="button" variant="outline" size="sm" className="w-full border-dashed" onClick={() => addItem(collectionKey, { id: crypto.randomUUID(), ...emptyItem })}><Plus className="mr-2 h-4 w-4" />Thêm {title.toLocaleLowerCase("vi")}</Button>
+      </div>
+    </Section>
+  );
+}
 
 export function CvEditor() {
-  const { cvData, updatePersonalInfo, addExperience, updateExperience, removeExperience } = useCvStore();
-  const { personalInfo, experiences } = cvData;
+  const { cvData, updatePersonalInfo } = useCvStore();
+  const personal = cvData.personalInfo;
+  const personalFields = [
+    ["fullName", "Họ và tên", "Nguyễn Văn An"], ["title", "Chức danh", "Kỹ sư Frontend"],
+    ["email", "Email", "email@example.com"], ["phone", "Số điện thoại", "0901 234 567"],
+    ["location", "Địa điểm", "TP. Hồ Chí Minh"], ["linkedin", "LinkedIn", "linkedin.com/in/ten-cua-ban"],
+    ["github", "GitHub", "github.com/ten-cua-ban"], ["website", "Website/Portfolio", "portfolio.example.com"],
+  ] as const;
 
-  const handleAddExperience = () => {
-    addExperience({
-      id: crypto.randomUUID(),
-      company: "",
-      role: "",
-      startDate: "",
-      endDate: "",
-      isCurrent: false,
-      description: "",
-    });
-  };
-
-  return (
-    <div className="h-full overflow-y-auto p-6 space-y-8 bg-surface-white">
-      {/* Personal Info */}
-      <section className="space-y-4">
-        <h3 className="text-lg font-bold text-foreground">Thông tin cá nhân</h3>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Họ và tên</label>
-            <Input 
-              value={personalInfo.fullName} 
-              onChange={(e) => updatePersonalInfo({ fullName: e.target.value })} 
-              placeholder="Nguyễn Văn A" 
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Vị trí ứng tuyển (Title)</label>
-            <Input 
-              value={personalInfo.title} 
-              onChange={(e) => updatePersonalInfo({ title: e.target.value })} 
-              placeholder="Senior Frontend Developer" 
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Email</label>
-            <Input 
-              value={personalInfo.email} 
-              onChange={(e) => updatePersonalInfo({ email: e.target.value })} 
-              placeholder="email@example.com" 
-              type="email"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Số điện thoại</label>
-            <Input 
-              value={personalInfo.phone || ""} 
-              onChange={(e) => updatePersonalInfo({ phone: e.target.value })} 
-              placeholder="0901234567" 
-            />
-          </div>
-          <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Địa chỉ</label>
-            <Input 
-              value={personalInfo.location || ""} 
-              onChange={(e) => updatePersonalInfo({ location: e.target.value })} 
-              placeholder="TP. Hồ Chí Minh" 
-            />
-          </div>
-          <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Tóm tắt (Summary)</label>
-            <Textarea 
-              value={personalInfo.summary || ""} 
-              onChange={(e) => updatePersonalInfo({ summary: e.target.value })} 
-              placeholder="Một đoạn ngắn giới thiệu bản thân..." 
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Experience */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-foreground">Kinh nghiệm làm việc</h3>
-          <Button variant="outline" size="sm" onClick={handleAddExperience}>
-            <Plus className="w-4 h-4 mr-2" />
-            Thêm
-          </Button>
-        </div>
-
-        <div className="space-y-4">
-          {experiences.map((exp) => (
-            <div key={exp.id} className="p-4 rounded-xl border border-border-light bg-surface-low space-y-4 relative group">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="absolute top-2 right-2 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity hover:text-error hover:bg-error-container/50"
-                onClick={() => removeExperience(exp.id)}
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pr-8">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-foreground">Công ty</label>
-                  <Input 
-                    value={exp.company} 
-                    onChange={(e) => updateExperience(exp.id, { company: e.target.value })} 
-                    placeholder="Tech Corp" 
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-foreground">Vị trí</label>
-                  <Input 
-                    value={exp.role} 
-                    onChange={(e) => updateExperience(exp.id, { role: e.target.value })} 
-                    placeholder="Software Engineer" 
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-foreground">Thời gian bắt đầu</label>
-                  <Input 
-                    value={exp.startDate || ""} 
-                    onChange={(e) => updateExperience(exp.id, { startDate: e.target.value })} 
-                    placeholder="01/2022" 
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-foreground">Thời gian kết thúc</label>
-                  <Input 
-                    value={exp.endDate || ""} 
-                    onChange={(e) => updateExperience(exp.id, { endDate: e.target.value })} 
-                    placeholder="Hiện tại" 
-                    disabled={exp.isCurrent}
-                  />
-                </div>
-                <div className="sm:col-span-2 space-y-1.5">
-                  <label className="text-xs font-semibold text-foreground">Mô tả công việc</label>
-                  <Textarea 
-                    value={exp.description || ""} 
-                    onChange={(e) => updateExperience(exp.id, { description: e.target.value })} 
-                    placeholder="- Phát triển tính năng X..." 
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-          {experiences.length === 0 && (
-            <div className="text-center py-8 text-sm text-text-muted border-2 border-dashed border-border-light rounded-xl">
-              Chưa có kinh nghiệm làm việc nào.
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Other sections (Education, Skills) would follow similar patterns */}
-    </div>
-  );
+  return <div className="space-y-3 bg-surface-low p-3 md:p-4">
+    <Section title="Thông tin cá nhân" icon={<UserRound className="h-4 w-4 text-primary" />}>
+      <div className="grid gap-3 sm:grid-cols-2">{personalFields.map(([key, label, placeholder]) => <label key={key} className="space-y-1.5 text-xs font-semibold text-foreground"><span>{label}</span><Input type={key === "email" ? "email" : "text"} value={personal[key] ?? ""} onChange={(event) => updatePersonalInfo({ [key]: event.target.value })} placeholder={placeholder} /></label>)}</div>
+      <label className="mt-3 block space-y-1.5 text-xs font-semibold text-foreground"><span>Giới thiệu bản thân</span><Textarea value={personal.summary ?? ""} onChange={(event) => updatePersonalInfo({ summary: event.target.value })} placeholder="Tóm tắt chuyên môn, số năm kinh nghiệm và giá trị bạn mang lại..." rows={4} /><span className="block text-right font-normal text-text-muted">{personal.summary?.length ?? 0}/1500</span></label>
+    </Section>
+    <CollectionSection collectionKey="experiences" title="Kinh nghiệm làm việc" icon={<BriefcaseBusiness className="h-4 w-4 text-primary" />} emptyItem={{ company: "", role: "", location: "", startDate: "", endDate: "", isCurrent: false, description: "" }} fields={[{ key: "company", label: "Công ty" }, { key: "role", label: "Chức vụ" }, { key: "startDate", label: "Bắt đầu", placeholder: "01/2022" }, { key: "endDate", label: "Kết thúc", placeholder: "Hiện tại" }, { key: "location", label: "Địa điểm", wide: true }, { key: "description", label: "Thành tựu và trách nhiệm", placeholder: "Mỗi dòng là một kết quả; ưu tiên động từ và số liệu có thể kiểm chứng.", wide: true, textarea: true }]} />
+    <CollectionSection collectionKey="projects" title="Dự án nổi bật" icon={<FolderKanban className="h-4 w-4 text-primary" />} emptyItem={{ name: "", role: "", url: "", technologies: "", description: "" }} fields={[{ key: "name", label: "Tên dự án" }, { key: "role", label: "Vai trò" }, { key: "technologies", label: "Công nghệ", placeholder: "Next.js, PostgreSQL, Docker", wide: true }, { key: "url", label: "Liên kết", wide: true }, { key: "description", label: "Bài toán, đóng góp và kết quả", wide: true, textarea: true }]} />
+    <CollectionSection collectionKey="educations" title="Học vấn" icon={<GraduationCap className="h-4 w-4 text-primary" />} emptyItem={{ institution: "", degree: "", field: "", startDate: "", endDate: "", description: "" }} fields={[{ key: "institution", label: "Trường", wide: true }, { key: "degree", label: "Bằng cấp" }, { key: "field", label: "Chuyên ngành" }, { key: "startDate", label: "Bắt đầu" }, { key: "endDate", label: "Kết thúc" }, { key: "description", label: "Thông tin bổ sung", wide: true, textarea: true }]} />
+    <CollectionSection collectionKey="skills" title="Kỹ năng" icon={<Wrench className="h-4 w-4 text-primary" />} emptyItem={{ name: "", category: "" }} fields={[{ key: "category", label: "Nhóm", placeholder: "Frontend" }, { key: "name", label: "Kỹ năng", placeholder: "React" }]} />
+    <CollectionSection collectionKey="certifications" title="Chứng chỉ" icon={<Award className="h-4 w-4 text-primary" />} emptyItem={{ name: "", issuer: "", issueDate: "", url: "" }} fields={[{ key: "name", label: "Tên chứng chỉ" }, { key: "issuer", label: "Đơn vị cấp" }, { key: "issueDate", label: "Thời điểm cấp" }, { key: "url", label: "Liên kết xác minh" }]} />
+    <CollectionSection collectionKey="languages" title="Ngoại ngữ" icon={<Globe2 className="h-4 w-4 text-primary" />} emptyItem={{ name: "", proficiency: "" }} fields={[{ key: "name", label: "Ngôn ngữ" }, { key: "proficiency", label: "Trình độ", placeholder: "IELTS 7.0 / Thành thạo" }]} />
+  </div>;
 }

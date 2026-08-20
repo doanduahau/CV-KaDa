@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { CvSchema, PersonalInfoSchema } from "./cv.schema";
+import { CvSchema, evaluateCvCompletion, PersonalInfoSchema } from "./cv.schema";
 
 const validCv = {
   personalInfo: {
@@ -97,5 +97,13 @@ describe("CV schemas", () => {
       expect(paths).toContain("skills.0.name");
       expect(paths).toContain("skills.0.level");
     }
+  });
+
+  it("reports transparent CV completion without inventing candidate facts", () => {
+    const cv = CvSchema.parse(validCv);
+    const result = evaluateCvCompletion(cv);
+
+    expect(result.percentage).toBe(88);
+    expect(result.missing).toEqual(["Số điện thoại"]);
   });
 });

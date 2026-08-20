@@ -1,9 +1,9 @@
 "use server";
 
 import { auth } from "@/auth";
-import { CvData, CvSchema } from "../schemas/cv.schema";
+import type { CvData } from "../schemas/cv.schema";
 import { requireActiveRole } from "@/features/auth/services/session-authorization";
-import { resumeRepository } from "../repositories/resume.repository";
+import { resumeService, ResumeValidationError } from "../services/resume.service";
 
 export async function saveCvAction(resumeId: string, data: CvData) {
   try {
@@ -16,16 +16,16 @@ export async function saveCvAction(resumeId: string, data: CvData) {
       return { success: false, error: "Forbidden" };
     }
 
-    // Validate incoming data
-    const parsedData = CvSchema.parse(data);
+    const saved = await resumeService.saveVersion(principal.id, resumeId, data);
 
-    const saved = await resumeRepository.saveVersionWithRetry(resumeId, principal.id, parsedData);
-
-    if (!saved) return { success: false, error: "CV not found or access denied" };
+    if (!saved) return { success: false, error: "Không tìm thấy CV hoặc bạn không có quyền chỉnh sửa." };
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("Failed to save CV:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Unknown error occurred" };
+    if (error instanceof ResumeValidationError) {
+      return { success: false, error: error.issues[0]?.message ?? "Dữ liệu CV không hợp lệ." };
+    }
+    console.error("Không thể lưu phiên bản CV.");
+    return { success: false, error: "Không thể lưu CV lúc này." };
   }
 }
