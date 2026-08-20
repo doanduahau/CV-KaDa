@@ -8,6 +8,7 @@ vi.mock("../repositories/resume.repository", () => ({
     findByUserId: vi.fn(),
     create: vi.fn(),
     softDelete: vi.fn(),
+    saveVersionWithRetry: vi.fn(),
   },
 }));
 
@@ -41,10 +42,17 @@ describe("ResumeService", () => {
           phone: "",
           title: "",
           summary: "",
+          location: "",
+          linkedin: "",
+          github: "",
+          website: "",
         },
         experiences: [],
         educations: [],
         skills: [],
+        projects: [],
+        certifications: [],
+        languages: [],
       }
     );
   });
@@ -122,5 +130,18 @@ Built React and TypeScript applications with PostgreSQL.`
     await new ResumeService().deleteResume("resume-1");
 
     expect(mockedResumeRepository.softDelete).toHaveBeenCalledWith("resume-1");
+  });
+
+  it("validates and saves a candidate-owned CV version through the repository", async () => {
+    mockedResumeRepository.saveVersionWithRetry.mockResolvedValue(true);
+
+    await expect(new ResumeService().saveVersion("user-1", "resume-1", {
+      personalInfo: { fullName: "Nguyễn Văn A", email: "a@example.com" },
+      experiences: [], educations: [], skills: [], projects: [], certifications: [], languages: [],
+    })).resolves.toBe(true);
+
+    expect(mockedResumeRepository.saveVersionWithRetry).toHaveBeenCalledWith(
+      "resume-1", "user-1", expect.objectContaining({ personalInfo: expect.objectContaining({ fullName: "Nguyễn Văn A" }) })
+    );
   });
 });
