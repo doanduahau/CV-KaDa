@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const seedSource = readFileSync(resolve(process.cwd(), "prisma/seed.ts"), "utf8");
+const demoDataSource = readFileSync(resolve(process.cwd(), "prisma/demo-data.ts"), "utf8");
 const readme = readFileSync(resolve(process.cwd(), "README.md"), "utf8");
 
 describe("database seed safety", () => {
@@ -23,5 +24,13 @@ describe("database seed safety", () => {
     const codeEnd = readme.indexOf("```", codeStart + 7);
     const defaultSetupCommands = readme.slice(codeStart, codeEnd);
     expect(defaultSetupCommands).not.toContain("npm run db:seed");
+  });
+
+  it("keeps demo records deterministic so repeated seeds can upsert safely", () => {
+    expect(seedSource).toContain("prisma.company.upsert");
+    expect(seedSource).toContain("prisma.companyMembership.upsert");
+    expect(seedSource).toContain("prisma.job.upsert");
+    expect(seedSource).not.toContain("prisma.job.create");
+    expect(demoDataSource).toContain('source: "DEMO_REFERENCE"');
   });
 });
