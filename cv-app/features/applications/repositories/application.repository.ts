@@ -77,6 +77,12 @@ export class ApplicationRepository {
     });
   }
 
+  createMatchAiRun(userId: string, audit: NonNullable<CvJdMatchResult["audit"]>) {
+    return prisma.aiRun.create({
+      data: { userId, feature: "MATCH_ANALYSIS", promptVersion: "cv-jd-v2", ...audit },
+    });
+  }
+
   listApplicationsForUser(userId: string) {
     return prisma.application.findMany({
       where: { userId, deletedAt: null },

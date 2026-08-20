@@ -16,6 +16,7 @@ function createRepositoryMock() {
     findApplicationForUserAndJob: vi.fn(),
     createApplication: vi.fn(),
     createMatchAnalysis: vi.fn(),
+    createMatchAiRun: vi.fn(),
     listApplicationsForUser: vi.fn(),
     findApplicationForUser: vi.fn(),
   } satisfies Record<keyof ApplicationRepository, ReturnType<typeof vi.fn>>;
@@ -72,7 +73,7 @@ describe("ApplicationService", () => {
       service.applyToJob("user-1", { jobId: "job-1", resumeVersionId: "version-1" })
     ).resolves.toEqual({ id: "application-1" });
 
-    await vi.waitFor(() => expect(consoleError).toHaveBeenCalledWith("CV-JD match analysis creation failed:", expect.any(Error)));
+    expect(consoleError).toHaveBeenCalledWith("CV-JD match analysis did not complete", "Error");
     consoleError.mockRestore();
   });
 
