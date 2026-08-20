@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Evaluate Answer API Error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to evaluate answer" },
+      { error: error instanceof Error ? error.message : "Không thể đánh giá câu trả lời" },
       { status: 500 }
     );
   }

@@ -174,7 +174,7 @@ export function RecruiterJobForm() {
                       workMode === "HYBRID" ? "bg-[#2563EB] text-white" : "bg-white text-foreground border border-border-light hover:bg-gray-50"
                     )}
                   >
-                    Hybrid
+                    Kết hợp
                   </button>
                   <button 
                     type="button" 
@@ -184,7 +184,7 @@ export function RecruiterJobForm() {
                       workMode === "REMOTE" ? "bg-[#2563EB] text-white" : "bg-white text-foreground border border-border-light hover:bg-gray-50"
                     )}
                   >
-                    Remote
+                    Làm việc từ xa
                   </button>
                 </div>
                 {/* Hidden input to pass the actual form value */}

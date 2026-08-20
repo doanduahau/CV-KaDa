@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!resume || !resume.versions.length) {
-      return NextResponse.json({ error: "No CV found to optimize" }, { status: 404 });
+      return NextResponse.json({ error: "Không tìm thấy CV để tối ưu" }, { status: 404 });
     }
 
     const cvData = resume.versions[0].content;
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Optimization API Error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to optimize CV" },
+      { error: error instanceof Error ? error.message : "Không thể tối ưu CV" },
       { status: 500 }
     );
   }

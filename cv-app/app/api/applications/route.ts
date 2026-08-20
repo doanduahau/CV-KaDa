@@ -52,11 +52,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
     console.error("Create application error:", error);
-    return NextResponse.json({ error: "Failed to create application" }, { status: 500 });
+    return NextResponse.json({ error: "Không thể tạo đơn ứng tuyển" }, { status: 500 });
   }
 }
 
 export async function PATCH(req: NextRequest) {
   void req;
-  return NextResponse.json({ error: "Candidate status updates are not supported." }, { status: 405 });
+  return NextResponse.json({ error: "Ứng viên không được phép cập nhật trạng thái đơn." }, { status: 405 });
 }

@@ -1,6 +1,7 @@
 export function PageSkeleton({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="animate-pulse space-y-5" aria-label="?ang t?i n?i dung">
+    <div className="animate-pulse space-y-5" role="status" aria-live="polite" aria-busy="true">
+      <span className="sr-only">Đang tải nội dung...</span>
       <section className="rounded-2xl bg-surface-white p-5 shadow-card md:p-7">
         <div className="h-4 w-28 rounded bg-surface-container-highest" />
         <div className="mt-4 h-8 w-2/3 max-w-lg rounded bg-surface-container-highest" />
