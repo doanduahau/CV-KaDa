@@ -24,6 +24,7 @@ import { saveJobAction } from "@/features/jobs/actions/save-job";
 import { formatJobPostedLabel } from "@/features/jobs/services/job-posted-label";
 import { jobService } from "@/features/jobs/services/job.service";
 import { cn } from "@/lib/utils";
+import AtsGauge from "@/components/dashboard/AtsGauge";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -212,6 +213,12 @@ export default async function DashboardPage() {
 
         {/* Right Column (Sidebar) */}
         <aside className="space-y-6">
+
+          {summary.latestMatchScore !== undefined ? <AtsGauge score={summary.latestMatchScore} /> : (
+            <Link href="/job-match" className="block rounded-2xl border border-dashed border-primary/30 bg-white p-6 text-center text-sm font-semibold text-primary shadow-sm hover:bg-blue-50">
+              Phân tích CV với JD để nhận điểm phù hợp
+            </Link>
+          )}
 
           {/* Profile Card */}
           <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-border-light text-center">

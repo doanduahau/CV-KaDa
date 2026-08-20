@@ -8,12 +8,14 @@ vi.mock("@/lib/db/prisma", () => ({
     user: { findUnique: vi.fn() },
     resume: { findMany: vi.fn() },
     application: { findMany: vi.fn() },
+    matchAnalysis: { findFirst: vi.fn() },
   },
 }));
 
 describe("CandidateDashboardService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    (prisma.matchAnalysis.findFirst as Mock).mockResolvedValue(null);
   });
 
   it("aggregates persisted current-user data without fixed demo counts", async () => {
@@ -53,12 +55,14 @@ describe("CandidateDashboardService", () => {
       { status: "INTERVIEWING" },
       { status: "INTERVIEWING" },
     ]);
+    (prisma.matchAnalysis.findFirst as Mock).mockResolvedValue({ overallScore: 86 });
     await expect(new CandidateDashboardService().getSummary("user-1")).resolves.toMatchObject({
       userName: "An Nguyen",
       cvReady: true,
       profileComplete: true,
       resumeCount: 1,
       latestResumeVersionId: "version-1",
+      latestMatchScore: 86,
       nextAction: { label: "Theo dõi ứng tuyển", href: "/applications" },
       applicationCounts: { total: 3, applied: 1, interviewing: 2 },
     });

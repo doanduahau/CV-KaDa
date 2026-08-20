@@ -13,6 +13,7 @@ vi.mock("@/lib/db/prisma", () => ({
     job: { findFirst: vi.fn() },
     resumeVersion: { findFirst: vi.fn() },
     matchAnalysis: { findFirst: vi.fn(), create: vi.fn() },
+    aiRun: { create: vi.fn() },
   },
 }));
 

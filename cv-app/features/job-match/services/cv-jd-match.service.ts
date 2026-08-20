@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
-import { analyzeResumeMatch } from "@/lib/ai/gemini";
+import { GeminiJobMatchProvider } from "../providers/gemini-job-match.provider";
+import type { JobMatchProvider } from "../providers/job-match.provider";
 
 export type MatchJobInput = {
   title: string;
@@ -15,6 +16,7 @@ export type CvJdMatchResult = {
   experienceMatch: number;
   skillsMatch: number;
   details: Prisma.InputJsonObject;
+  audit?: { model: string; promptTokens: number; completionTokens: number; durationMs: number; status: "SUCCESS" | "FAILED"; errorCode?: string };
 };
 
 const commonWords = new Set([
@@ -87,20 +89,21 @@ function jobSkills(job: MatchJobInput) {
 
 export class CvJdMatchService {
   constructor(
-    private readonly analyzeWithAi: typeof analyzeResumeMatch | null =
-      process.env.NODE_ENV !== "test" && process.env.GEMINI_API_KEY ? analyzeResumeMatch : null
+    private readonly aiProvider: JobMatchProvider | null =
+      process.env.NODE_ENV !== "test" && process.env.GEMINI_API_KEY ? new GeminiJobMatchProvider() : null
   ) {}
 
   async analyze(resumeContent: unknown, job: MatchJobInput): Promise<CvJdMatchResult> {
     const resume = jsonText(resumeContent);
     const jd = jobText(job);
 
-    if (!this.analyzeWithAi) {
+    if (!this.aiProvider) {
       return this.analyzeHeuristic(resume, jd, job);
     }
 
     try {
-      const result = await this.analyzeWithAi(resume, jd);
+      const providerResult = await this.aiProvider.analyze(resume, jd);
+      const result = providerResult.result;
       
       return {
         overallScore: clampScore(result.overallScore),
@@ -116,11 +119,13 @@ export class CvJdMatchService {
             "Điểm số được tính toán bằng mô hình AI Gemini dựa trên khả năng hiểu ngữ nghĩa.",
           ],
         },
+        audit: { model: providerResult.model, promptTokens: providerResult.promptTokens, completionTokens: providerResult.completionTokens, durationMs: providerResult.durationMs, status: "SUCCESS" },
       };
     } catch (error) {
       console.error("AI CV Match failed, falling back to heuristic:", error);
       // Fallback to deterministic heuristic
-      return this.analyzeHeuristic(resume, jd, job);
+      const fallback = this.analyzeHeuristic(resume, jd, job);
+      return { ...fallback, audit: { model: "gemini-2.5-flash", promptTokens: 0, completionTokens: 0, durationMs: 0, status: "FAILED", errorCode: "PROVIDER_ERROR" } };
     }
   }
 

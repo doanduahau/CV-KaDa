@@ -5,12 +5,16 @@ import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
 import { Sparkles, CheckCircle2, AlertCircle, RefreshCw } from "lucide-react";
 import type { MatchAnalysisResult } from "@/lib/ai/gemini";
+import { sampleJobDescriptions } from "./sample-job-descriptions";
 
-export default function JobMatchClient() {
+type MatchHistoryItem = { id: string; overallScore: number; createdAt: string; resumeTitle: string };
+
+export default function JobMatchClient({ initialHistory = [] }: { initialHistory?: MatchHistoryItem[] }) {
   const [jobDescription, setJobDescription] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<MatchAnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState(initialHistory);
 
   const handleAnalyze = async () => {
     if (!jobDescription.trim()) {
@@ -36,6 +40,9 @@ export default function JobMatchClient() {
       }
 
       setResult(data);
+      if (data.analysisId && data.createdAt) {
+        setHistory((items) => [{ id: data.analysisId, overallScore: data.overallScore, createdAt: data.createdAt, resumeTitle: "CV hiện tại" }, ...items].slice(0, 5));
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Không thể kết nối đến máy chủ AI");
     } finally {
@@ -62,6 +69,22 @@ export default function JobMatchClient() {
             <label className="block text-sm font-semibold text-foreground">
               Mô tả công việc (Job Description)
             </label>
+            <div>
+              <p className="mb-2 text-xs font-semibold text-text-muted">Chọn nhanh JD mẫu</p>
+              <div className="flex flex-wrap gap-2">
+                {sampleJobDescriptions.map((sample) => (
+                  <button
+                    key={sample.id}
+                    type="button"
+                    disabled={isAnalyzing}
+                    onClick={() => { setJobDescription(sample.description); setError(null); }}
+                    className="rounded-full border border-primary/25 bg-primary/5 px-3 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+                  >
+                    {sample.title}
+                  </button>
+                ))}
+              </div>
+            </div>
             <Textarea
               className="min-h-[300px] resize-y"
               placeholder="Dán nội dung JD vào đây..."
@@ -193,6 +216,22 @@ export default function JobMatchClient() {
           )}
         </div>
       </div>
+
+      <section className="rounded-2xl border border-border-light bg-surface-white p-6 shadow-sm">
+        <h2 className="text-lg font-bold text-foreground">Lịch sử phân tích gần đây</h2>
+        {history.length === 0 ? (
+          <p className="mt-3 text-sm text-text-muted">Bạn chưa có lần phân tích CV nào.</p>
+        ) : (
+          <ul className="mt-4 divide-y divide-border-light">
+            {history.map((item) => (
+              <li key={item.id} className="flex items-center justify-between gap-4 py-3">
+                <div><p className="font-semibold text-foreground">{item.resumeTitle}</p><p className="text-xs text-text-muted">{new Intl.DateTimeFormat("vi-VN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.createdAt))}</p></div>
+                <span className="text-xl font-black text-primary">{item.overallScore}%</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

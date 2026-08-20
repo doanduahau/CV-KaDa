@@ -58,14 +58,14 @@ export class ApplicationService {
 
     try {
       const application = await this.repository.createApplication(userId, parsed.data);
-      // Run AI match async in the background to avoid blocking the user request
-      this.matchService.analyze(resumeVersion.content, job).then((match) => {
-        this.repository.createMatchAnalysis(parsed.data.resumeVersionId, parsed.data.jobId, match).catch((err) => {
-          console.error("CV-JD match analysis creation failed:", err);
-        });
-      }).catch((err) => {
-        console.error("CV-JD match AI trigger failed:", err);
-      });
+      // Await the analysis so the request cannot finish before its persisted result.
+      try {
+        const match = await this.matchService.analyze(resumeVersion.content, job);
+        if (match.audit) await this.repository.createMatchAiRun(userId, match.audit);
+        await this.repository.createMatchAnalysis(parsed.data.resumeVersionId, parsed.data.jobId, match);
+      } catch (error) {
+        console.error("CV-JD match analysis did not complete", error instanceof Error ? error.name : "UnknownError");
+      }
       
       return application;
     } catch (error) {

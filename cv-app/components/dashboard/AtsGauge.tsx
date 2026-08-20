@@ -17,11 +17,11 @@ export default function AtsGauge({ score }: AtsGaugeProps) {
     <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs flex flex-col justify-between relative overflow-hidden">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-bold text-slate-900 text-base">Điểm ATS Score CV</h3>
-          <p className="text-xs text-slate-500">Đánh giá khả năng vượt qua hệ thống lọc tự động</p>
+          <h3 className="font-bold text-slate-900 text-base">Điểm phù hợp CV–JD</h3>
+          <p className="text-xs text-slate-500">Kết quả phân tích gần nhất, mang tính tư vấn</p>
         </div>
         <span className="px-2.5 py-1 bg-indigo-50 text-indigo-700 font-semibold text-xs rounded-full border border-indigo-100">
-          Chất lượng cao
+          Điểm gần nhất
         </span>
       </div>
 
@@ -69,32 +69,19 @@ export default function AtsGauge({ score }: AtsGaugeProps) {
           </div>
         </div>
 
-        <div className="space-y-2.5 max-w-[160px]">
-          <div className="flex items-center gap-2 text-xs">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-            <span className="text-slate-600 font-medium">Từ khóa chuẩn: <strong className="text-slate-900">92%</strong></span>
-          </div>
-          <div className="flex items-center gap-2 text-xs">
-            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
-            <span className="text-slate-600 font-medium">Cấu trúc định dạng: <strong className="text-slate-900">Tốt</strong></span>
-          </div>
-          <div className="flex items-center gap-2 text-xs">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-            <span className="text-slate-600 font-medium">Tác động hành động: <strong className="text-slate-900">84%</strong></span>
-          </div>
-        </div>
+        <p className="max-w-[180px] text-xs leading-5 text-slate-600">Điểm được tính từ CV và JD cụ thể; không phải chứng nhận năng lực hay quyết định tuyển dụng.</p>
       </div>
 
       <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
         <span className="text-slate-500 flex items-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-          3 gợi ý nâng điểm ATS khả thi
+          Xem bằng chứng và giới hạn của kết quả
         </span>
         <Link
-          href="/job-optimization"
+          href="/job-match"
           className="font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 transition-colors"
         >
-          Tối ưu ngay
+          Xem phân tích
           <ArrowUpRight className="w-3.5 h-3.5" />
         </Link>
       </div>

@@ -8,7 +8,7 @@
 | `/login` | `app/login/page.tsx` | Implemented | Auth.js sign-in UI, including demo credentials path. |
 | `/my-cv` | `app/my-cv/page.tsx` | Partial | CV editor and preview with save action/backend support; persistence flow needs hardening. |
 | `/job-optimization` | `app/job-optimization/page.tsx` | Partial | Calls AI optimization route when authenticated and configured. |
-| `/job-match` | `app/job-match/page.tsx` | Partial | Calls AI match route; structured persistence is not complete. |
+| `/job-match` | `app/job-match/page.tsx` | Implemented | Validates and analyzes the authenticated candidate's CV against a manual JD, persists advisory results and AI audit metadata, and shows recent history. |
 | `/jobs` | `app/jobs/page.tsx` | Partial/mock | Job repository exists; screen still contains demo/client behavior, with a handoff CTA into assessments. |
 | `/assessments` | `app/assessments/page.tsx` | Implemented | Candidate selects user-owned CV version and JD, supports safe query preselection, creates realistic engineering tasks, handles missing CV/JD states, and sees recent sessions. |
 | `/assessments/[sessionId]` | `app/assessments/[sessionId]/page.tsx` | Implemented | Candidate submits text solutions and sees persisted advisory rubric/evidence report; unauthorized access renders an ownership-safe denial state. |
@@ -32,7 +32,7 @@
 | --- | --- | --- | --- |
 | `/api/auth/[...nextauth]` | `app/api/auth/[...nextauth]/route.ts` | Implemented | Auth.js route handlers. |
 | `/api/applications` | `app/api/applications/route.ts` | Partial | Application operations with authenticated user context. |
-| `/api/ai/match` | `app/api/ai/match/route.ts` | Partial/live credential | Requires auth, a user-owned resume, and `GEMINI_API_KEY` for live calls. |
+| `/api/ai/match` | `app/api/ai/match/route.ts` | Implemented/live credential | Authenticated candidate GET/POST endpoint backed by service, repository, provider, Zod validation, persisted manual analyses, and AI run auditing. |
 | `/api/ai/optimize` | `app/api/ai/optimize/route.ts` | Partial/live credential | Requires auth, a user-owned resume, and `GEMINI_API_KEY` for live calls. |
 | `/api/ai/interview/generate` | `app/api/ai/interview/generate/route.ts` | Partial/live credential | Generates interview questions through Gemini. |
 | `/api/ai/interview/evaluate` | `app/api/ai/interview/evaluate/route.ts` | Partial/live credential | Evaluates interview answers through Gemini. |
