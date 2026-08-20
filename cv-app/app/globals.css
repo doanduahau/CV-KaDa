@@ -77,3 +77,19 @@ body {
   55% { transform: translateX(90%); }
   100% { transform: translateX(240%); }
 }
+
+@media print {
+  @page { size: A4; margin: 0; }
+  body { background: #fff; }
+  .cv-builder {
+    position: absolute;
+    inset: 0;
+    z-index: 9999;
+    min-height: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+}
